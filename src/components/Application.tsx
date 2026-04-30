@@ -1,19 +1,27 @@
 import { useEffect, useRef, useState } from "react";
 
 interface ApplicationProps {
+  id: string;
   name: string;
   image: string;
   initialX: number;
   initialY: number;
+  isSelected: boolean;
+  onSelect: (id: string) => void;
+  onDeselect: () => void;
   onPositionChange: (name: string, x: number, y: number) => void;
   onOpen: () => void;
 }
 
 export default function Application({
+  id,
   name,
   image,
   initialX,
   initialY,
+  isSelected,
+  onSelect,
+  onDeselect,
   onPositionChange,
   onOpen,
 }: ApplicationProps) {
@@ -27,6 +35,7 @@ export default function Application({
       x: event.clientX - position.x,
       y: event.clientY - position.y,
     };
+    onSelect(id);
     event.preventDefault();
     event.currentTarget.setPointerCapture(event.pointerId);
   }
@@ -34,7 +43,6 @@ export default function Application({
   useEffect(() => {
     function handlePointerMove(event: PointerEvent) {
       if (!dragging.current) return;
-
       setPosition({
         x: event.clientX - offset.current.x,
         y: event.clientY - offset.current.y,
@@ -59,9 +67,15 @@ export default function Application({
   return (
     <button
       type="button"
-      onDoubleClick={() => onOpen()}
+      data-app-icon="true"
       onPointerDown={handlePointerDown}
-      className="absolute flex flex-col items-center touch-none select-none"
+      onDoubleClick={() => {
+        onDeselect();
+        onOpen();
+      }}
+      className={`absolute flex flex-col items-center touch-none select-none rounded-md p-1 ${
+        isSelected ? "bg-black/25 ring-2 ring-black/70" : ""
+      }`}
       style={{ left: position.x, top: position.y }}
     >
       <img src={image} alt={name} draggable={false} className="w-24 h-auto object-contain" />

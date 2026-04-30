@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { apps as defaultApps } from '../data/apps'
 import Application from './Application'
 
@@ -9,6 +9,9 @@ interface DesktopProps{
 }
 
 export default function Desktop({onOpenApp}: DesktopProps) {
+  const [selectedAppId, setSelectedAppId] = useState<string | null>(null);
+  const desktopRef = useRef<HTMLDivElement>(null);
+
   const [positions, setPositions] = useState<Record<string, {x:number,y:number}>>(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY)
@@ -16,7 +19,6 @@ export default function Desktop({onOpenApp}: DesktopProps) {
     } catch {
       localStorage.removeItem(STORAGE_KEY)
     }
-    // initialize from defaultApps using initialX/initialY
     return Object.fromEntries(defaultApps.map(a => [a.id, { x: a.x, y: a.y }]))
   })
 
@@ -24,19 +26,34 @@ export default function Desktop({onOpenApp}: DesktopProps) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(positions))
   }, [positions])
 
+  useEffect(() => {
+    function handleGlobalPointerDown(event: PointerEvent) {
+      const target = event.target as HTMLElement | null;
+      const clickedAppIcon = !!target?.closest('[data-app-icon="true"]');
+      if (!clickedAppIcon) setSelectedAppId(null); // click elsewhere -> clear
+    }
+
+    window.addEventListener("pointerdown", handleGlobalPointerDown);
+    return () => window.removeEventListener("pointerdown", handleGlobalPointerDown);
+  }, []);
+
   function updateAppPosition(id: string, x: number, y: number) {
     setPositions(p => ({ ...p, [id]: { x, y } }))
   }
 
   return (
-    <div className="relative min-h-screen">
+    <div ref={desktopRef} className="relative min-h-screen">
       {defaultApps.map(a => (
         <Application
           key={a.id}
+          id={a.id}
           name={a.name}
           image={a.image}
           initialX={positions[a.id]?.x ?? a.x}
           initialY={positions[a.id]?.y ?? a.y}
+          isSelected={selectedAppId === a.id}
+          onSelect={setSelectedAppId}
+          onDeselect={() => setSelectedAppId(null)}
           onPositionChange={(_, x, y) => updateAppPosition(a.id, x, y)}
           onOpen={() => onOpenApp({ id: a.id, name: a.name })}
         />
