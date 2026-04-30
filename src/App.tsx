@@ -4,38 +4,26 @@ import HomeMenu from './components/HomeMenu'
 import Taskbar from './components/Taskbar'
 import ApplicationWindow from './components/ApplicationWindow';
 import Desktop from './components/Desktop';
+import type { AppMeta } from './data/apps';
 
-type AppInfo = {
-  id: string;
-  name: string;
-};
 
 function App() {
   const [homeMenuVisibility, setHomeMenuVisibility] = useState(false);
   const [appOpen, setAppOpen] = useState(false);
-  const [activeApp, setActiveApp] = useState<AppInfo | null>(null);
-
+  const [activeApp, setActiveApp] = useState<AppMeta | null>(null);
   
-  function handleOpenApp(app: AppInfo) {
+  function handleOpenApp(app: AppMeta) {
     setActiveApp(app);
-    if(!appOpen){
-      setAppOpen(true)
-    }
+    setAppOpen(true)
   }
 
   function handleCloseApp() {
     setActiveApp(null);
-    if(appOpen){
-      setAppOpen(false)
-    }
+    setAppOpen(false)
   }
 
   function toggleHomeMenu(){
-      if (!homeMenuVisibility){
-          setHomeMenuVisibility(true)
-      } else{
-          setHomeMenuVisibility(false)
-      }
+    setHomeMenuVisibility((current) => !current)
   }
 
   return (
@@ -44,12 +32,13 @@ function App() {
       <Desktop onOpenApp={handleOpenApp}/>
 
       {/* Application window */}
-      {appOpen && (
+      {appOpen && activeApp &&(
         <ApplicationWindow
           name={activeApp?.name}
           initialX={50}
           initialY={40}
           closeWindow={handleCloseApp}
+          content={activeApp?.content}
         />
       )}
 

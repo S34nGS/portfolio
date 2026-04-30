@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
-import { apps as defaultApps } from '../data/apps'
+import { apps as defaultApps, type AppMeta } from '../data/apps'
 import Application from './Application'
 
 const STORAGE_KEY = 'desktop-app-positions'
 
 interface DesktopProps{
-    onOpenApp: (app: { id: string; name: string }) => void;
+    onOpenApp: (app: AppMeta) => void;
 }
 
 export default function Desktop({onOpenApp}: DesktopProps) {
@@ -55,7 +55,7 @@ export default function Desktop({onOpenApp}: DesktopProps) {
           onSelect={setSelectedAppId}
           onDeselect={() => setSelectedAppId(null)}
           onPositionChange={(_, x, y) => updateAppPosition(a.id, x, y)}
-          onOpen={() => onOpenApp({ id: a.id, name: a.name })}
+          onOpen={() => onOpenApp(a)}
         />
       ))}
     </div>

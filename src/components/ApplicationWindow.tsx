@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 interface ApplicationWindowProps {
   name: string | undefined;
   initialX: number;
   initialY: number;
   closeWindow: () => void;
+  content: ReactNode;
 }
 
 export default function ApplicationWindow({
@@ -12,6 +13,7 @@ export default function ApplicationWindow({
   initialX,
   initialY,
   closeWindow,
+  content,
 }: ApplicationWindowProps) {
   const [position, setPosition] = useState({ x: initialX, y: initialY });
   const dragging = useRef(false);
@@ -80,9 +82,11 @@ export default function ApplicationWindow({
           </svg>
         </button>
 
-        {/* Window content */}
-        <div></div>
+      </div>
 
+      {/* Window content */}
+      <div>
+        {content}
       </div>
 
     </div>
