@@ -38,8 +38,8 @@ function App() {
       {/* Application window */}
       {appOpen && (
         <ApplicationWindow
-          initialX={350}
-          initialY={120}
+          initialX={50}
+          initialY={40}
           closeWindow={closeApp}
         />
       )}

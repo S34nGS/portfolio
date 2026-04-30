@@ -51,7 +51,7 @@ export default function ApplicationWindow({
 
   return (
     <div
-      className="absolute bg-slate-200 w-96 h-96"
+      className="absolute bg-slate-200 w-11/12 h-5/6"
       style={{ left: position.x, top: position.y }}
     >
       <div
