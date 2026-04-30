@@ -55,14 +55,19 @@ export default function ApplicationWindow({
       style={{ left: position.x, top: position.y }}
     >
       <div
-        className="bg-slate-400 h-8 w-full cursor-move touch-none"
+        className="bg-slate-400 h-8 w-full cursor-move touch-none flex items-center justify-end px-2"
         onPointerDown={handlePointerDown}
       >
         <button
+            type="button"
+            aria-label="Close window"
             onPointerDown={(event) => event.stopPropagation()}
             onClick={closeWindow}
+            className="h-6 w-6 bg-red-500 text-white text-sm leading-none flex items-center justify-center hover:bg-red-600"
         >
-            Close
+          <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M6 6l12 12M18 6l-12 12" strokeLinecap="round" />
+          </svg>
         </button>
       </div>
     </div>
