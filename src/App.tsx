@@ -5,18 +5,26 @@ import Taskbar from './components/Taskbar'
 import ApplicationWindow from './components/ApplicationWindow';
 import Desktop from './components/Desktop';
 
+type AppInfo = {
+  id: string;
+  name: string;
+};
 
 function App() {
   const [homeMenuVisibility, setHomeMenuVisibility] = useState(false);
   const [appOpen, setAppOpen] = useState(false);
+  const [activeApp, setActiveApp] = useState<AppInfo | null>(null);
 
-  function openApp() {
+  
+  function handleOpenApp(app: AppInfo) {
+    setActiveApp(app);
     if(!appOpen){
       setAppOpen(true)
     }
   }
 
-  function closeApp(){
+  function handleCloseApp() {
+    setActiveApp(null);
     if(appOpen){
       setAppOpen(false)
     }
@@ -33,14 +41,15 @@ function App() {
   return (
     <>
       {/* Desktop */}
-      <Desktop openApp={openApp}/>
+      <Desktop onOpenApp={handleOpenApp}/>
 
       {/* Application window */}
       {appOpen && (
         <ApplicationWindow
+          name={activeApp?.name}
           initialX={50}
           initialY={40}
-          closeWindow={closeApp}
+          closeWindow={handleCloseApp}
         />
       )}
 

@@ -5,10 +5,10 @@ import Application from './Application'
 const STORAGE_KEY = 'desktop-app-positions'
 
 interface DesktopProps{
-    openApp: () => void;
+    onOpenApp: (app: { id: string; name: string }) => void;
 }
 
-export default function Desktop({openApp}: DesktopProps) {
+export default function Desktop({onOpenApp}: DesktopProps) {
   const [positions, setPositions] = useState<Record<string, {x:number,y:number}>>(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY)
@@ -38,7 +38,7 @@ export default function Desktop({openApp}: DesktopProps) {
           initialX={positions[a.id]?.x ?? a.x}
           initialY={positions[a.id]?.y ?? a.y}
           onPositionChange={(_, x, y) => updateAppPosition(a.id, x, y)}
-          onOpen={() => {openApp()}}
+          onOpen={() => onOpenApp({ id: a.id, name: a.name })}
         />
       ))}
     </div>

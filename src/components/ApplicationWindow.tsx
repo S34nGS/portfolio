@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 
 interface ApplicationWindowProps {
+  name: string | undefined;
   initialX: number;
   initialY: number;
   closeWindow: () => void;
 }
 
 export default function ApplicationWindow({
+  name,
   initialX,
   initialY,
   closeWindow,
@@ -55,9 +57,10 @@ export default function ApplicationWindow({
       style={{ left: position.x, top: position.y }}
     >
       <div
-        className="bg-slate-400 h-8 w-full cursor-move touch-none flex items-center justify-end px-2"
+        className="bg-slate-400 h-8 w-full cursor-move touch-none flex items-center justify-between px-2"
         onPointerDown={handlePointerDown}
       >
+        <h1 className="text-sm font-medium text-slate-900">{name}</h1>
         <button
             type="button"
             aria-label="Close window"
